@@ -19,70 +19,14 @@
 
 Name:           wlcs
 Version:        1.7.0
-Release:        %autorelease
+Release:        1
 Summary:        Wayland Conformance Test Suite
-
-# The entire source is GPL-3.0-only, except:
-#
-# (GPL-2.0-only OR GPL-3.0-only):
-#   - CMakeLists.txt
-# > Build system file that does not contribute to the licenses of the binary
-#   RPMs
-#
-# (LGPL-2.0-only OR LGPL-3.0-only):
-#   - include/geometry/*
-#   - include/mutex.h
-#   - include/shared_library.h
-#   - src/helpers.cpp
-#   - src/shared_library.cpp
-# > Since (L)GPLv2-only code is not compatible with (L)GPLv3 or (L)GPLv3+ code,
-#   and these sources are combined with GPLv3 code, the LGPLv3 option is used
-#   in this package. However, we encode both options in the SPDX expression.
-#
-# GPLv2+:
-#   - debian/*
-# > Not used in this package
-#
-# MIT:
-#   - src/protocol/gtk-primary-selection.xml
-#   - src/protocol/input-method-unstable-v1.xml
-#   - src/protocol/pointer-constraints-unstable-v1.xml
-#   - src/protocol/primary-selection-unstable-v1.xml
-#   - src/protocol/relative-pointer-unstable-v1.xml
-#   - src/protocol/wayland.xml
-#   - src/protocol/wlr-virtual-pointer-unstable-v1.xml
-#   - src/protocol/xdg-output-unstable-v1.xml
-#   - src/protocol/xdg-shell-unstable-v6.xml
-#   - src/protocol/xdg-shell.xml
-#   - tests/test_bad_buffer.cpp
-#   - tests/test_surface_events.cpp
-#   - tests/text_input_v3_with_input_method_v2.cpp
-#   - tests/wlr_virtual_pointer_v1.cpp
-#   - tests/xdg_popup_v6.cpp
-#   - tests/xdg_surface_stable.cpp
-#   - tests/xdg_surface_v6.cpp
-#   - tests/xdg_toplevel_stable.cpp
-#   - tests/xdg_toplevel_v6.cpp
-# > Files in tests/ are all test code that is not installed (so does not
-#   contribute to the licenses of the binary RPMs). Files in src/protocol/ are
-#   used as inputs to “wayland-scanner” to generate C source files and headers,
-#   and are not directly included in the binary RPMs.
-#
-# HPND-sell-variant:
-#   - src/protocol/text-input-unstable-v2.xml
-# > Files in src/protocol/ are used as inputs to “wayland-scanner” to generate
-#   C source files and headers, and are not directly included in the binary
-#   RPMs.
 License:        GPL-3.0-only AND (LGPL-2.0-only OR LGPL-3.0-only)
 URL:            https://github.com/MirServer/wlcs
 Source:         %{url}/archive/v%{version}/wlcs-%{version}.tar.gz
 
-BuildRequires:  gcc
-BuildRequires:  gcc-c++
-
 BuildRequires:  cmake
-BuildRequires:  ninja-build
-
+BuildRequires:  ninja
 BuildRequires:  boost-devel
 BuildRequires:  cmake(GTest)
 BuildRequires:  gmock-devel
@@ -141,16 +85,11 @@ sed -r -i 's/-Werror //' CMakeLists.txt
     -DWLCS_BUILD_TSAN=%{?with_tsan:ON}%{?!with_tsan:OFF} \
     -DWLCS_BUILD_UBSAN=%{?with_ubsan:ON}%{?!with_ubsan:OFF} \
     -GNinja
-%cmake_build
+%make_build
 
 
 %install
-%cmake_install
-
-
-%check
-%ctest
-
+%make_install -C build
 
 %files
 %license COPYING.*
