@@ -76,13 +76,12 @@ Wayland compositor tests that use wlcs.
 # -Werror makes sense for upstream CI, but is too strict for packaging
 sed -r -i 's/-Werror //' CMakeLists.txt
 
-%build
 %cmake \
     -DWLCS_BUILD_ASAN=%{?with_asan:ON}%{?!with_asan:OFF} \
     -DWLCS_BUILD_TSAN=%{?with_tsan:ON}%{?!with_tsan:OFF} \
     -DWLCS_BUILD_UBSAN=%{?with_ubsan:ON}%{?!with_ubsan:OFF} \
     -GNinja
-
+%build
 %make_build
 
 %install
