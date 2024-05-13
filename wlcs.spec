@@ -83,10 +83,10 @@ sed -r -i 's/-Werror //' CMakeLists.txt
     -DWLCS_BUILD_UBSAN=%{?with_ubsan:ON}%{?!with_ubsan:OFF} \
     -GNinja
 
-%make_build
+%ninja_build -C build/
 
 %install
-%make_install -C build
+%ninja_install -C build/
 
 %files
 %license COPYING.*
