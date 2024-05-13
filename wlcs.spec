@@ -29,7 +29,7 @@ BuildRequires:  cmake
 BuildRequires:  ninja
 BuildRequires:  boost-devel
 BuildRequires:  cmake(GTest)
-BuildRequires:  gmock-devel
+BuildRequires:  pkgconfig(gmock)
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig(wayland-scanner)
