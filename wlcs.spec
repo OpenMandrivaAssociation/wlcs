@@ -60,7 +60,6 @@ clock available, it’s easier to poke around in compositor internals, and
 standard debugging tools can follow control flow from the test client to the
 compositor and back again.
 
-
 %package        devel
 Summary:        Development files for wlcs
 Requires:       wlcs%{?_isa} = %{version}-%{release}
@@ -72,12 +71,10 @@ Wayland compositor implementors.
 The wlcs-devel package contains libraries and header files for developing
 Wayland compositor tests that use wlcs.
 
-
 %prep
-%autosetup
+%autosetup -p1
 # -Werror makes sense for upstream CI, but is too strict for packaging
 sed -r -i 's/-Werror //' CMakeLists.txt
-
 
 %build
 %cmake \
@@ -88,24 +85,16 @@ sed -r -i 's/-Werror //' CMakeLists.txt
 
 %make_build
 
-
 %install
 %make_install -C build
 
 %files
 %license COPYING.*
 %doc README.rst
-
 %{_libexecdir}/wlcs/
-
 
 %files devel
 %doc README.rst
 %doc example/
-
 %{_includedir}/wlcs/
 %{_libdir}/pkgconfig/wlcs.pc
-
-
-%changelog
-%autochangelog
