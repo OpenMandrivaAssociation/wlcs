@@ -35,13 +35,13 @@ BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig(wayland-scanner)
 
 %if %{with asan}
-BuildRequires:  libasan
+BuildRequires:  asan-devel
 %endif
 %if %{with ubsan}
-BuildRequires:  libubsan
+BuildRequires:  ubsan-devel
 %endif
 %if %{with tsan}
-BuildRequires:  libtsan
+BuildRequires:  tsan-devel
 %endif
 
 %description
