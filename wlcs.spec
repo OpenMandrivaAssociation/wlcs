@@ -85,6 +85,7 @@ sed -r -i 's/-Werror //' CMakeLists.txt
     -DWLCS_BUILD_TSAN=%{?with_tsan:ON}%{?!with_tsan:OFF} \
     -DWLCS_BUILD_UBSAN=%{?with_ubsan:ON}%{?!with_ubsan:OFF} \
     -GNinja
+
 %make_build
 
 
