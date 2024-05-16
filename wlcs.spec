@@ -2,20 +2,20 @@
 # Current as of 13.2.1 (lines 66, 86, and 76, respectively).
 # Note that asan and ubsan are available on all Fedora primary architectures;
 # tsan is missing on i686 only.
-%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64
+%ifarch %{ix86} %{x86_64} ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} %{aarch64}
 %global arch_has_asan 1
 %endif
-%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64
+%ifarch %{ix86} %{x86_64} ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} %{aarch64}
 %global arch_has_ubsan 1
 %endif
-%ifarch x86_64 ppc64 ppc64le aarch64 s390x
+%ifarch %{x86_64} ppc64 ppc64le %{aarch64} s390x
 %global arch_has_tsan 1
 %endif
 
 # By default, enable sanitizers whenever they are available on the architecture.
-%bcond asan 0%{?arch_has_asan:1}
-%bcond ubsan 0%{?arch_has_ubsan:1}
-%bcond tsan 0%{?arch_has_tsan:1}
+%bcond asan 0
+%bcond ubsan 0
+%bcond tsan 0
 
 Name:           wlcs
 Version:        1.7.0
@@ -23,16 +23,19 @@ Release:        1
 Summary:        Wayland Conformance Test Suite
 License:        GPL-3.0-only AND (LGPL-2.0-only OR LGPL-3.0-only)
 URL:            https://github.com/MirServer/wlcs
-Source:         %{url}/archive/v%{version}/wlcs-%{version}.tar.gz
+Source:         https://github.com/MirServer/wlcs/archive/v%{version}/wlcs-%{version}.tar.gz
 
-BuildRequires:  cmake
-BuildRequires:  ninja
 BuildRequires:  boost-devel
 BuildRequires:  cmake(GTest)
 BuildRequires:  pkgconfig(gmock)
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig(wayland-scanner)
+
+BuildSystem:	cmake
+BuildOption:	-DWLCS_BUILD_ASAN=%{?with_asan:ON}%{?!with_asan:OFF}
+BuildOption:	-DWLCS_BUILD_TSAN=%{?with_tsan:ON}%{?!with_tsan:OFF}
+BuildOption:	-DWLCS_BUILD_UBSAN=%{?with_ubsan:ON}%{?!with_ubsan:OFF}
 
 %if %{with asan}
 BuildRequires:  asan-devel
@@ -71,21 +74,9 @@ Wayland compositor implementors.
 The wlcs-devel package contains libraries and header files for developing
 Wayland compositor tests that use wlcs.
 
-%prep
-%autosetup -p1
+%prep -a
 # -Werror makes sense for upstream CI, but is too strict for packaging
 sed -r -i 's/-Werror //' CMakeLists.txt
-
-%build
-%cmake \
-    -DWLCS_BUILD_ASAN=%{?with_asan:ON}%{?!with_asan:OFF} \
-    -DWLCS_BUILD_TSAN=%{?with_tsan:ON}%{?!with_tsan:OFF} \
-    -DWLCS_BUILD_UBSAN=%{?with_ubsan:ON}%{?!with_ubsan:OFF}
-
-%make_build
-
-%install
-%make_install -C build
 
 %files
 %license COPYING.*
